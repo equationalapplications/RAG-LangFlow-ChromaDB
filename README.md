@@ -111,9 +111,16 @@
 | :--- | :--- | :--- |
 | **Empty Responses** | Missing or wrong collection name. | Ensure the `Collection Name` in the Ingest and Retrieve nodes match exactly. |
 | **Hallucinations** | Model is ignoring context. | Lower the `Temperature` to **0.1** and verify the Prompt Template includes `{context}`. |
-| **Docker Connection Refused** | Incorrect Host URL. | Inside Docker, use `http://chromadb:8000` instead of `localhost`. |
+| **Docker Connection Refused** | Incorrect Host URL. | Inside Docker, use `chromadb` (the Docker service name) and port `8000` — **not** `localhost`. |
 | **Embedding Mismatch** | Using different models for Ingest vs. Query. | Always use the **exact same** embedding model (e.g., `text-embedding-3-small`) for both sides. |
 | **Data "Disappearing"** | No volume mapping in Docker. | Map a local folder to `/chroma/chroma` in the Chroma container. |
+| **Google Embedding 404 Error** | `text-embedding-004` is deprecated/broken in this environment. | Switch to **OpenAI Embeddings** with `text-embedding-3-small`. Requires `OPENAI_API_KEY`. |
+| **Read File → Split Text: "Validation Failed"** | Read File outputs a `Message` type, but Split Text expects `Data`. | Connect them directly — Split Text's `data_inputs` actually accepts `Message`, `Data`, and `DataFrame`. No converter needed. |
+| **Type Convert node stays red** | Type Convert's "Data" mode emits a `JSON` type, not a true `Data` object, which Split Text rejects. | Remove the Type Convert node entirely and wire **Read File directly to Split Text**. |
+| **Play button stays disabled** | One or more upstream nodes have a validation error (shown as red border). | Each red node has a missing required field. Fix them individually — the Play button only enables when the **entire chain** is valid. |
+| **Chroma DB "Persist Directory" mode** | The component defaults to local file mode (inside the Langflow container), not the external Docker service. | In advanced settings, set **Chroma Server Host** to `chromadb` and **Port** to `8000`. Clear the Persist Directory field. |
+| **Embedding Model API key not visible** | The API Key field is hidden by default. | Click the **Controls icon** (sliders) on the Embedding Model node header to reveal advanced fields including the API key. |
+| **API key not being picked up by LangFlow** | Key exported in shell but LangFlow Docker container doesn't inherit it. | Reload your shell profile (`source ~/.zshrc`) and restart Docker Compose **after** the key is exported. Alternatively, add the key to a `.env` file or set it directly in the LangFlow component's field. |
 
 ---
 

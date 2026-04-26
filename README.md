@@ -26,7 +26,7 @@
     * **Start the Stack:** Run `docker compose up -d` to start both services in detached mode.
     * **Technical Step:** Highlight the network configuration. LangFlow needs to talk to ChromaDB via the service name (e.g., `http://chromadb:8000`).
 * **Persistence:** Demonstrate the use of Docker Volumes.
-    * `./chroma_data:/data` in the compose file ensures that even if the container is deleted, your "memory" remains on your physical disk.
+    * `./chroma_data:/chroma/chroma` in the compose file ensures that even if the container is deleted, your "memory" remains on your physical disk.
 * **Accessing the UI:** Open `localhost:7860` to access the LangFlow dashboard.
     * **Opening Browser in VS Code:**
         1. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
@@ -107,7 +107,7 @@
 | **Hallucinations** | Model is ignoring context. | Lower the `Temperature` to **0.1** and verify the Prompt Template includes `{context}`. |
 | **Docker Connection Refused** | Incorrect Host URL. | Inside Docker, use `http://chromadb:8000` instead of `localhost`. |
 | **Embedding Mismatch** | Using different models for Ingest vs. Query. | Always use the **exact same** embedding model (e.g., `text-embedding-3-small`) for both sides. |
-| **Data "Disappearing"** | No volume mapping in Docker. | Map a local folder to `/index_data` in the Chroma container. |
+| **Data "Disappearing"** | No volume mapping in Docker. | Map a local folder to `/chroma/chroma` in the Chroma container. |
 
 ---
 

@@ -7,13 +7,19 @@ services:
       - ./chroma_data:/chroma/chroma
     networks:
       - rag-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   langflow:
     image: langflowai/langflow:latest
     ports:
       - "7860:7860"
     depends_on:
-      - chromadb
+      chromadb:
+        condition: service_healthy
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:

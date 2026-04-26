@@ -8,7 +8,7 @@ services:
     networks:
       - rag-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -20,8 +20,6 @@ services:
     depends_on:
       chromadb:
         condition: service_healthy
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       - ./langflow_data:/app/langflow
     networks:

@@ -1,0 +1,21 @@
+# Environment variables with sensitive data
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Docker volumes (local data storage)
+chroma_data/
+langflow_data/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS
+.DS_Store
+Thumbs.db

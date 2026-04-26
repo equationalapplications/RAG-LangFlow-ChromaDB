@@ -90,7 +90,13 @@
        Context: {context}
        Question: {question}
        ```
-    2. **OpenAI Model** — from the *Models* category. Set `Temperature` to **0.1** for factual responses.
+    2. **OpenAI Model** (or any LLM) — from the *Models* category. You can choose:
+       * OpenAI: `gpt-4` or `gpt-3.5-turbo`
+       * Google Gemini: `gemini-pro`
+       * Anthropic Claude: `claude-3-sonnet`
+       * Groq: `mixtral-8x7b-32768`
+       
+       Set `Temperature` to **0.1** for factual responses.
     3. **Chat Output** — from the *Outputs* category.
 * **Connections:** `Chroma DB (Search)` results → `Prompt Template` ({context}); `Chat Input` → `Prompt Template` ({question}); `Prompt Template` → `OpenAI Model` → `Chat Output`.
 * **Speaking Point:** "The Prompt Template is where the magic happens. We tell the AI: 'Use only the provided context to answer the question.' This is the 'open-book exam' for the LLM."
@@ -121,7 +127,26 @@
 ### Instructor Setup Checklist
 1.  **Docker Desktop:** Running and healthy.
 2.  **VSCode:** Terminal open to the project root.
-3.  **API Keys:** OpenAI or Ollama environment variables set.
+3.  **API Keys:** Set your LLM provider API key(s) using **one** of these methods:
+    * **Method A — Export environment variables (temporary):**
+      ```bash
+      export OPENAI_API_KEY=your_key_here
+      # or
+      export GOOGLE_API_KEY=your_key_here
+      # or
+      export ANTHROPIC_API_KEY=your_key_here
+      # or
+      export GROQ_API_KEY=your_key_here
+      ```
+    * **Method B — Create a `.env` file (persistent, safer):**
+      Create a file named `.env` in your project root:
+      ```
+      OPENAI_API_KEY=your_key_here
+      # GOOGLE_API_KEY=your_key_here
+      # ANTHROPIC_API_KEY=your_key_here
+      # GROQ_API_KEY=your_key_here
+      ```
+      Then start the stack: `docker compose up -d`
 4.  **Sample Data:** A 2-page PDF or TXT file ready for the demo.
 
 Does this structured approach align with the technical depth you want to provide for your live session?

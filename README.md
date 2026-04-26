@@ -23,6 +23,7 @@
 
 * **VSCode & Docker Compose:**
     * Show a `docker-compose.yml` that links LangFlow and ChromaDB.
+    * **Start the Stack:** Run `docker compose up -d` to start both services in detached mode.
     * **Technical Step:** Highlight the network configuration. LangFlow needs to talk to ChromaDB via the service name (e.g., `http://chromadb:8000`).
 * **Persistence:** Demonstrate the use of Docker Volumes.
     * `./chroma_data:/data` in the compose file ensures that even if the container is deleted, your "memory" remains on your physical disk.

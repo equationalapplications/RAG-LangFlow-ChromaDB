@@ -38,20 +38,63 @@
 
 ---
 
-## III. Live Demo: Building the RAG Pipeline (00:25 – 00:55)
-**Goal:** Step-by-step construction of the RAG flow.
+## III. Live Demo: Building the RAG Pipeline from Scratch (00:25 – 00:55)
+**Goal:** Step-by-step construction of the RAG flow starting from a **Blank Flow**.
+
+> **Important:** We are intentionally **NOT** using a template. Students learn best by building each component themselves and understanding *why* each connection exists.
+
+### Setup: Create a Blank Flow
+1. From the LangFlow dashboard, click **"Create first flow"** (or **"+ New Flow"**).
+2. In the template dialog, scroll down and select **"Blank Flow"**.
+3. You will see an empty canvas — this is where we build our RAG pipeline piece by piece.
+4. **How to add components:** Drag from the left sidebar onto the canvas. **How to connect:** Click and drag from one node's output handle to another node's input handle.
+
+---
 
 ### 1. The Ingestion Flow (The "Writer")
-* **Components:** `File Loader` $\rightarrow$ `Recursive Character Text Splitter` $\rightarrow$ `ChromaDB`.
+**Goal:** Load a document, split it into chunks, and store it in ChromaDB.
+
+* **Components to add (in order):**
+    1. **File Loader** — from the *Data* category. Configure it to accept a PDF or TXT file.
+    2. **Recursive Character Text Splitter** — from the *Processing* category. Set `chunk_size` to ~1000 and `chunk_overlap` to ~100.
+    3. **OpenAI Embeddings** — from the *Embeddings* category. Use `text-embedding-3-small`.
+    4. **Chroma DB** — from the *Vector Stores* category. Set `Collection Name` to `rag_demo` and `Host` to `chromadb` (the Docker service name) on port `8000`.
+* **Connections:** `File Loader` → `Text Splitter` → `Chroma DB` (and connect `OpenAI Embeddings` → `Chroma DB`).
 * **Speaking Point:** "We split text into chunks because LLMs have a 'context window' limit. We use an overlap (e.g., 10%) so we don't lose context at the edges of a cut."
+* **Run it:** Click the play button on the `Chroma DB` node to ingest the document.
+
+---
 
 ### 2. The Retrieval Flow (The "Reader")
-* **Components:** `Chat Input` $\rightarrow$ `OpenAI Embeddings` $\rightarrow$ `ChromaDB (Search)`.
+**Goal:** Take a user question, embed it, and find matching chunks.
+
+* **Components to add (in order):**
+    1. **Chat Input** — from the *Inputs* category.
+    2. **OpenAI Embeddings** — *the exact same model* as above (`text-embedding-3-small`).
+    3. **Chroma DB (Search Mode)** — same `Collection Name` (`rag_demo`) and `Host` as the ingestion flow. Switch the mode to **"Search"** or use a dedicated retriever node.
+* **Connections:** `Chat Input` → `OpenAI Embeddings` → `Chroma DB (Search)`.
 * **Logic:** The user query is embedded into the same vector space as our documents to find a match.
+* **Speaking Point:** "Notice we use the *same* embedding model on both sides. Mismatched models = nonsense results."
+
+---
 
 ### 3. The Augmentation & Generation
-* **Components:** `Prompt Template` $\rightarrow$ `OpenAI Model` $\rightarrow$ `Chat Output`.
+**Goal:** Combine the retrieved chunks with the question and let the LLM answer.
+
+* **Components to add (in order):**
+    1. **Prompt Template** — from the *Prompts* category. Use a template like:
+       ```
+       Use ONLY the following context to answer the question.
+       If the answer is not in the context, say "I don't know."
+
+       Context: {context}
+       Question: {question}
+       ```
+    2. **OpenAI Model** — from the *Models* category. Set `Temperature` to **0.1** for factual responses.
+    3. **Chat Output** — from the *Outputs* category.
+* **Connections:** `Chroma DB (Search)` results → `Prompt Template` ({context}); `Chat Input` → `Prompt Template` ({question}); `Prompt Template` → `OpenAI Model` → `Chat Output`.
 * **Speaking Point:** "The Prompt Template is where the magic happens. We tell the AI: 'Use only the provided context to answer the question.' This is the 'open-book exam' for the LLM."
+* **Test it:** Click the **Playground** button (top-right) and ask a question about your uploaded document.
 
 ---
 

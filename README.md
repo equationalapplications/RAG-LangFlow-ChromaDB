@@ -28,6 +28,13 @@
 * **Persistence:** Demonstrate the use of Docker Volumes.
     * `./chroma_data:/data` in the compose file ensures that even if the container is deleted, your "memory" remains on your physical disk.
 * **Accessing the UI:** Open `localhost:7860` to access the LangFlow dashboard.
+    * **Opening Browser in VS Code:**
+        1. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+        2. Type "Simple Browser: Show"
+        3. Select it from the dropdown
+        4. Paste `http://localhost:7860` in the address bar
+        5. Press Enter
+    * **Alternative:** Use the Live Preview extension from the marketplace for more features.
 
 ---
 

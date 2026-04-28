@@ -1,6 +1,6 @@
 services:
   chromadb:
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:1.5.8
     ports:
       - "8000:8000"
     volumes:
@@ -9,12 +9,17 @@ services:
       - rag-network
 
   langflow:
-    image: langflowai/langflow:latest
+    image: langflowai/langflow:1.9.1
     ports:
       - "7860:7860"
     depends_on:
       - chromadb
     restart: on-failure
+    environment:
+      - LANGFLOW_CONFIG_DIR=/app/langflow
+    env_file:
+      - path: .env
+        required: false
     volumes:
       - ./langflow_data:/app/langflow
     networks:
